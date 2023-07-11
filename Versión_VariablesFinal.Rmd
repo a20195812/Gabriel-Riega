@@ -1,0 +1,94 @@
+---
+title: "Untitled"
+output: html_document
+date: "2023-07-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+```{r}
+library(rio)
+
+data = import("baselimpia.xlsx")
+
+str(data)
+
+names(data)
+
+```
+
+```{r}
+data = na.omit(data)
+```
+
+
+
+modelo1<-lm(adult_mortality ~ PercentageUHC+ Age + total_litres_of_pure_alcohol, data)
+modelo2<-lm(adult_mortality ~ PercentageUHC + Medical_doctors + total_litres_of_pure_alcohol, data)
+
+models = list(modelo1,modelo2)
+modelsummary(models, output = "kableExtra")
+
+```{r}
+library(modelsummary)
+```
+
+
+
+```{r}
+modelo1<-lm(adult_mortality ~ PercentageUHC + Medical_doctors + WaterPercentage, data)
+
+modelo2<-lm(adult_mortality ~ total_litres_of_pure_alcohol + bmi + Sugar_and_SweetenersKg + Animal_ProductsKG, data)
+
+
+models = list(modelo1,modelo2)
+modelsummary(models, output = "kableExtra")
+```
+```{r}
+library(magrittr)
+library(knitr)
+tanova=anova(modelo1,modelo2)
+tanova
+```
+modelo1<-lm(adult_mortality ~ PercentageUHC + Medical_doctors + WaterPercentage, data)
+
+
+```{r}
+
+modelo2b=formula(scale(adult_mortality)~scale(PercentageUHC)+scale(Medical_doctors)+scale(WaterPercentage))
+
+reg2b=lm(modelo2b,data)
+
+model2b=list(reg2b)
+
+modelsummary(model2b, title = "Regresion: modelo con \ncoeficientes estandarizados",
+             stars = TRUE,
+             output = "kableExtra")
+```
+
+
+
